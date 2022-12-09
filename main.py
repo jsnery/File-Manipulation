@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from shutil import copy2, move
 
+class FolderNotFoundError(Exception): ...
 
 class main(ABC):
     def __init__(self):
@@ -9,7 +10,7 @@ class main(ABC):
 
     @property
     @abstractmethod
-    def file(self):...
+    def file(self) -> str:...
     
     @file.setter
     @abstractmethod
@@ -17,7 +18,7 @@ class main(ABC):
     
     @property
     @abstractmethod
-    def dir(self):...
+    def dir(self) -> str:...
     
     @dir.setter
     @abstractmethod
@@ -27,7 +28,7 @@ class main(ABC):
 class FileManipulation(main):
     
     @property
-    def file(self):
+    def file(self) -> str:
         if self._dirfile is None:
             return f'File directory not defined'
         return self._dirfile
@@ -37,7 +38,7 @@ class FileManipulation(main):
         self._dirfile = file.replace("'", '')
 
     @property
-    def dir(self):
+    def dir(self) -> str:
         if self._destinationdir is None:
             return f'Directory not defined'
         return self._destinationdir
@@ -48,13 +49,17 @@ class FileManipulation(main):
     
     
     def move_file(self):
-        if self._dirfile is None or self._destinationdir is None:
-            raise FileNotFoundError('File or Directory not defined, please define!')
+        if self._dirfile is None or self._dirfile == '':
+            raise FileNotFoundError('File not defined, please define!')
+        elif self._destinationdir is None or self._destinationdir == '':
+            raise FolderNotFoundError('Directory not defined, please define!')
         move(self._dirfile, self._destinationdir)
     
     def copy_file(self):
-        if self._dirfile is None or self._destinationdir is None:
-            raise FileNotFoundError('File or Directory not defined, please define!')
+        if self._dirfile is None or self._dirfile == '':
+            raise FileNotFoundError('File not defined, please define!')
+        elif self._destinationdir is None or self._destinationdir == '':
+            raise FolderNotFoundError('Directory not defined, please define!')
         copy2(self._dirfile, self._destinationdir)
         
         
